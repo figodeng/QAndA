@@ -1,0 +1,23 @@
+现在几乎所有的产品都是多应用，应用之间的通信怎么处理，有很多方案。最近有一种流行的方案就是Grpc，本文不对Grpc做科普，直接看官网就可以。
+当我们使用Grpc的时候，首先需要通过protocol buffers 定义message和rpc方法，但是C#是不认这些语法的。这时就需要把这些protocol buffers文件转换成C#代码，我们就来说说玩转这个转换。
+
+前提：
+
+（1）.net project集成Grpc，使用应用其他packages
+google.protobuf.3.6.1.nupkg
+grpc.1.18.0.nupkg
+grpc.tools.1.18.0.nupkg
+（2）定义.proto文件
+
+方案一：命令行
+
+grpc.tools.1.18.0.nupkg 是一个工具包。使用protoc.exe可以执行命令生产类，如：
+
+protoc --proto_path=PATH --csharp_out=OUT_DIR
+
+这个不是我们想要的，还要手动执行命令。聪明一点可以在project配置执行命令，但是不是我们想要的
+
+方案二：自动生成
+在项目文件的<ItemGroup>节点下配置.proto文件路径
+<ProtoBuf Include="Test.proto" />
+在编译时protoc.exe会找到Test.proto，然后自动编译生成对应的C#文件类
